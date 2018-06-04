@@ -1,28 +1,49 @@
-.App {
-    text-align: center;
+.wrapper{
+    max-width: 1000px;
+    margin: 0 auto;
 }
-
-.App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 80px;
+.useraccount-messages{
+    height: 50px;
+    color: red;
 }
-
-.App-header {
-    background-color: #222;
-    height: 150px;
-    padding: 20px;
-    color: white;
+.nav{
+    padding: 15px;
+    border-bottom: 1px solid #bbb; 
 }
-
-.App-title {
-    font-size: 1.5em;
+.nav-list{
+    margin: 0;
+    list-style: none;    
+    text-align: right;
 }
-
-.App-intro {
-    font-size: large;
+.nav-list li{
+    margin: 0;
+    padding: 0;
+    display: inline-block;
 }
-
-@keyframes App-logo-spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.nav-list a{
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.nav-list a:hover{    
+    text-decoration: underline;
+}
+.content-row{
+    display: flex;
+    flex-wrap: nowrap;
+}
+.content-row .column{
+    width: 33%;
+}
+.rooms-list li{
+    cursor: pointer;
+}
+.btn-delete{
+    display: inline-block;
+    color: red;
+    border: 1px solid red; 
+    cursor: pointer;   
+}
+.is-login .btn-delete{
+    display: inline-block;
 }
