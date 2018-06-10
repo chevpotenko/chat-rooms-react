@@ -5,6 +5,7 @@ class Rooms extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            user: this.props.user,
             newRoomName: ''
         }        
     }  
@@ -40,30 +41,35 @@ class Rooms extends React.Component {
 
     render() {                              
 
-        let roomsItems = this.props.roomsList.map((room, index) =>
-            <li key={index} onClick={ () => this.selectRoom(room.id) }>
-                {room.name}
-                {this.props.user[0].value ? 
-                    <span className="btn-delete"
-                            onClick={ (e) => this.deleteRoom(e, room.id) }>x</span> 
-                    : ''
-                }
-            </li>
-        );
+        let roomsItems = '';
+
+        if (this.props.roomsList) {            
+            roomsItems = this.props.roomsList.map((room, index) =>
+                <li key={index} onClick={ () => this.selectRoom(room.id) }>
+                    {room.name}
+                    {
+                        this.state.user[0].value ? 
+                            (<span className="btn-delete"
+                                    onClick={ (e) => this.deleteRoom(e, room.id) }>x</span> 
+                        ): ('')
+                    }
+                </li>)
+         }
 
         return(
             <div className="column rooms">
                 <h3>Rooms</h3>
-                {this.props.user[0].value ? (
-                    <div className="room-control">
-                        <input type="text"
-                                className="room-newitem"
-                                value={ this.state.newRoomName }
-                                onChange={ (e) => this.setNewRoomName(e) }
-                                placeholder="Name"/>
-                        <button className="room-add"
-                                onClick={ () => this.addRoom(this.newRoom) }>add</button>
-                    </div>
+                {
+                    this.state.user[0].value ? (
+                        <div className="room-control">
+                            <input type="text"
+                                    className="room-newitem"
+                                    value={ this.state.newRoomName }
+                                    onChange={ (e) => this.setNewRoomName(e) }
+                                    placeholder="Name"/>
+                            <button className="room-add"
+                                    onClick={ () => this.addRoom(this.newRoom) }>add</button>
+                        </div>
                     ) : ('')
                 }            
                 <ul className="rooms-list">{ roomsItems }</ul>

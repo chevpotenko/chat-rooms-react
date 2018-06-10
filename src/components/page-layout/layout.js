@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Link } from "react-router-dom";
 import axios from 'axios';
-import './App.css';
 
-import {user} from './dummy-data/dummy-data';
+import {user} from '../../dummy-data/dummy-data';
 
-import PageIndex from './components/page-index/page-index';
-import PageSignIn from './components/page-sign-in/sign-in';
-import PageSignUp from './components/page-sign-up/sign-up';
-import MainMenu from './components/page-layout/main-menu';
+import PageIndex from '../../components/page-index/page-index';
+import PageSignIn from '../../components/page-sign-in/sign-in';
+import PageSignUp from '../../components/page-sign-up/sign-up';
+import MainMenu from '../../components/page-layout/main-menu';
 
+class PageLayout extends React.Component {
 
-class App extends Component {
-    
     constructor(props) {
         super(props);
         this.state = {
@@ -66,7 +64,8 @@ class App extends Component {
                 </div>
             </Router>              
         );
-    }
+    }   
+
 }
 
-export default App;
+export default PageLayout;

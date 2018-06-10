@@ -36,7 +36,7 @@ const users = [
 
 const user = [{
     id: 'login',
-    value: true
+    value: false
 }];
 
 export {rooms, user, users};
