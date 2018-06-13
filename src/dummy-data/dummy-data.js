@@ -34,9 +34,8 @@ const users = [
    
 ];
 
-const user = [{
-    id: 'login',
-    value: false
-}];
+const user = {
+    isLogin: true
+};
 
 export {rooms, user, users};

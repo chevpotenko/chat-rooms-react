@@ -1,13 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import axios from 'axios';
+
+import { addRoom, deleteRoom  } from '../../actions/rooms-actions';
 
 class Rooms extends React.Component {
     
     constructor(props){
         super(props);
-        this.state = {
-            user: this.props.user,
+        this.state = {           
             newRoomName: ''
-        }        
+        }                
     }  
    
     setNewRoomName(e) {
@@ -17,15 +20,34 @@ class Rooms extends React.Component {
     }
 
     selectRoom(id) {
-        let currentRoom = this.props.roomsList.find((room, index) => {             
+        let currentRoom = this.props.rooms.find((room, index) => {             
             return room.id === id 
         });
-        this.props.onSelectRoom(currentRoom.id);
+        this.props.onSelectRoom(currentRoom);
+    } 
+    
+    _addRoom(room) {
+        axios.post('/api/rooms', room)
+        .then(res => {
+            console.log('POST',res)    
+            this.setState({
+                rooms: [...this.state.rooms, room]
+            });
+        });
+    }   
+
+    _deleteRoom(id) {
+        axios.delete('/api/rooms/' + id)
+        .then(res => {
+            let rooms = this.state.rooms.filter(room => room.id !== id);
+            this.setState({rooms: rooms});
+        });
     }
+
     
     addRoom(room) {
         let newRoom = {
-            id: this.props.roomsList.length,
+            id: this.props.rooms.length,
             name: this.state.newRoomName,
             todo: []
         }
@@ -42,40 +64,61 @@ class Rooms extends React.Component {
     render() {                              
 
         let roomsItems = '';
+        let roomsControl= '';
 
-        if (this.props.roomsList) {            
-            roomsItems = this.props.roomsList.map((room, index) =>
+        if (this.props.rooms) {            
+            roomsItems = this.props.rooms.map((room, index) =>
                 <li key={index} onClick={ () => this.selectRoom(room.id) }>
                     {room.name}
                     {
-                        this.state.user[0].value ? 
+                        this.props.user.isLogin ? 
                             (<span className="btn-delete"
                                     onClick={ (e) => this.deleteRoom(e, room.id) }>x</span> 
                         ): ('')
                     }
                 </li>)
-         }
+        }
+
+        if(this.props.user.isLogin) {
+            roomsControl = (
+                <div className="room-control">
+                    <input type="text"
+                            className="room-newitem"
+                            value={ this.state.newRoomName }
+                            onChange={ (e) => this.setNewRoomName(e) }
+                            placeholder="Name"/>
+                    <button className="room-add"
+                            onClick={ () => this.addRoom(this.newRoom) }>add</button>
+                </div>
+            )
+        }
 
         return(
             <div className="column rooms">
                 <h3>Rooms</h3>
-                {
-                    this.state.user[0].value ? (
-                        <div className="room-control">
-                            <input type="text"
-                                    className="room-newitem"
-                                    value={ this.state.newRoomName }
-                                    onChange={ (e) => this.setNewRoomName(e) }
-                                    placeholder="Name"/>
-                            <button className="room-add"
-                                    onClick={ () => this.addRoom(this.newRoom) }>add</button>
-                        </div>
-                    ) : ('')
-                }            
+                { roomsControl }            
                 <ul className="rooms-list">{ roomsItems }</ul>
             </div>
         );
     }
 }
 
-export default Rooms;
+
+const mapStateToProps = (state) => {
+    return {
+        rooms: state.roomsState.rooms
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {       
+        addRoom: (item) => {
+            dispatch(addRoom(item))
+        },      
+        deleteRoom: (item) => {
+            dispatch(deleteRoom(item))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Rooms);

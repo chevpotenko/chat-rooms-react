@@ -1,38 +1,37 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Link } from "react-router-dom";
+import { connect } from 'react-redux';
 import axios from 'axios';
+
 import './App.css';
 
-import {user} from './dummy-data/dummy-data';
+import { user } from './dummy-data/dummy-data';
+
+import { setUser  } from './actions/user-actions';
 
 import PageIndex from './components/page-index/page-index';
 import PageSignIn from './components/page-sign-in/sign-in';
 import PageSignUp from './components/page-sign-up/sign-up';
-import MainMenu from './components/page-layout/main-menu';
-
 
 class App extends Component {
     
     constructor(props) {
-        super(props);
-        this.state = {
-            userState: [{
-                id: 'login',
-                value: user[0].value
-            }]
-        }
+        super(props); 
     }    
     
-    componentWillMount() {
-        console.log('componentWillMount')
+    componentWillMount() {     
+        console.log('componentWillMount');
     }
     
     componentDidMount() {
-        console.log('componentDidMount')
+        // this.setUserState();         
+        this.props.setUser(user.isLogin);
+        console.log('componentDidMount');
     }
 
     shouldComponentUpdate() {
-        console.log(' shouldComponentUpdate')
+        console.log('shouldComponentUpdate');
+        return true;
     }
     
     componentDidUpdate() {
@@ -45,23 +44,32 @@ class App extends Component {
 
     setUserState() {
         axios.get('/api/user/signin')
-        .then(res => {            
-            let user = [...this.state.userState];
-            user[0].value = res.data.value;            
-            this.setState({userState: user});
-            console.log(this.state.userState);           
-        });
+        .then(res => {});
     }
 
     render() {
+      
+        let menu = this.props.user.isLogin ? (
+            <ul className="nav-list">
+                <li><Link to="/">Home page</Link> | </li>                               
+                <li><a href="/user/logout">Log Out</a></li>
+            </ul>   
+        ) : (
+            <ul className="nav-list">
+                <li><Link to="/">Home page</Link> | </li>
+                <li><Link to="/user/signup">Sign Up</Link> | </li>
+                <li><Link to="/user/signin">Sign In</Link></li>
+            </ul>
+        )       
+
         return (            
             <Router>
-                <div className="wrapper">                
-                    <MainMenu userState={this.state.userState}/>
+                <div className="wrapper">             
+                <nav className="nav">{ menu }</nav>
                     <div className="content">                                                                
                         <Route path="/user/signin" component={PageSignIn}/>
                         <Route path="/user/signup" component={PageSignUp}/>
-                        <Route exact path="/" render={() => <PageIndex user={this.state.userState} onSetUserState={this.setUserState.bind(this)}/>}/>                        
+                        <Route exact path="/" render={() => <PageIndex user={this.props.user}/>}/>                        
                     </div>
                 </div>
             </Router>              
@@ -69,4 +77,18 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        user: state.userState.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {       
+        setUser: (val) => {
+            dispatch(setUser(val))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
