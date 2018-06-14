@@ -38,25 +38,16 @@ class PageIndex extends React.Component {
     render() {
         return ( 
             <div className="content-row">
-                <Rooms rooms={ this.props.rooms } 
-                        user={ this.props.user }
-                        onSelectRoom={ this.selectRoom.bind(this) }/>
-
-                <TodoList rooms={ this.props.rooms }
-                            user={ this.props.user }
-                            currentRoom={ this.state.currentRoomId }/>
+                <Rooms onSelectRoom={ this.selectRoom.bind(this) }/>
+                <TodoList currentRoom={ this.state.currentRoomId }/>
                 <Users/>
             </div>
         );
-    }   
-
+    }
 }
 
 const mapStateToProps = (state) => {
-    return {
-        rooms: state.roomsState.rooms,
-        user: state.userState.user
-    }
+    return {}
 }
 
 const mapDispatchToProps = (dispatch) => {

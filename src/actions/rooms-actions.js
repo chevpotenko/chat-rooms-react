@@ -5,17 +5,17 @@ export var addRoom = (item) => {
     };
 }
 
-export var deleteRoom = (item) => {
+export var deleteRoom = (items) => {
     return {
         type: 'DELETE_ROOM',
-        payload: item
+        payload: items
     }
 }
 
-export var updateRoom = (item) => {
+export var updateRoom = (items) => {
     return {
         type: 'UPDATE_ROOM',
-        payload: item
+        payload: items
     }
 }
 

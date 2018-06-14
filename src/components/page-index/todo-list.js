@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { updateRoom } from '../../actions/rooms-actions';
 
-class Users extends React.Component {
+class TodoList extends React.Component {
 
     constructor(props) {
         super(props);
@@ -16,48 +18,35 @@ class Users extends React.Component {
         });
     }
 
-    addTask(id) {       
-        this.props.onAddTask(id, this.state.newTask);
-    }
-
-    deleteTask(task, id) {       
-        this.props.onDeleteTask(task, id);
-    }
-
-    _addTask(id, task) {
-        let indexChangedRoom = null;
-        let newRooms =  [...this.state.rooms];
-        let changedRoom = newRooms.find((item, index) => {
-            if(item.id === id) {
-                indexChangedRoom = index;
-                return true;
-            }
-            return false
-        });
-        newRooms[indexChangedRoom].todo.push(task);
-        axios.put('/api/rooms/' + id, changedRoom)
-        .then(res => {
-            this.setState({rooms: newRooms});
-        }); 
-    }
-
-    _deleteTask(task, id) {        
-        let indexChangedRoom = null;
-        let newRooms =  [...this.state.rooms];
-        let changedRoom = newRooms.find((item, index) => {
-            if(item.id === id) {
-                indexChangedRoom = index;
+   addTask(roomId) {
+        let indexUpdatedRoom = null;
+        let updatedRoom = this.props.rooms.find((item, index) => {            
+            if (item.id === roomId) {
+                indexUpdatedRoom = index;
                 return true;
             }
         });
-        let updatedTasks = newRooms[indexChangedRoom].todo.filter((item) => {
+        let updatedRooms = [...this.props.rooms];
+        updatedRooms[indexUpdatedRoom].todo.push(this.state.newTask);
+        this.props.updateRoom(updatedRooms);
+        // axios.put('/api/rooms/' + id, updatedRooms[indexUpdatedRoom]).then(res => {}); 
+    }
+
+    deleteTask(task, roomId) {        
+        let indexUpdatedRoom = null;
+        let updatedRoom = this.props.rooms.find((item, index) => {
+            if(item.id === roomId) {
+                indexUpdatedRoom = index;
+                return true;
+            }
+        });
+        let updatedTasks = this.props.rooms[indexUpdatedRoom].todo.filter((item) => {
             return item !== task
         });
-        newRooms[indexChangedRoom].todo = updatedTasks;
-        axios.put('/api/rooms/' + id, newRooms[indexChangedRoom])
-        .then(res => {
-            this.setState({rooms: newRooms});
-        });        
+        let updatedRooms = [...this.props.rooms];
+        updatedRooms[indexUpdatedRoom].todo = updatedTasks; 
+        this.props.updateRoom(updatedRooms);      
+        // axios.put('/api/rooms/' + id, updatedRooms[indexUpdatedRoom]).then(res => {});        
     }
 
     render() {
@@ -112,4 +101,20 @@ class Users extends React.Component {
     }
 }
 
-export default Users;
+
+const mapStateToProps = (state) => {
+    return {
+        rooms: state.roomsState.rooms,
+        user: state.userState.user
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {       
+        updateRoom: (rooms) => {
+            dispatch(updateRoom(rooms))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

@@ -36,7 +36,8 @@ class Users extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        users: state.usersState.users
+        users: state.usersState.users,
+        user: state.usersState.user
     }
 }
 

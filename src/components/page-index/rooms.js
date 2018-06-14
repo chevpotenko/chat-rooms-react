@@ -26,25 +26,6 @@ class Rooms extends React.Component {
         this.props.onSelectRoom(currentRoom);
     } 
     
-    _addRoom(room) {
-        axios.post('/api/rooms', room)
-        .then(res => {
-            console.log('POST',res)    
-            this.setState({
-                rooms: [...this.state.rooms, room]
-            });
-        });
-    }   
-
-    _deleteRoom(id) {
-        axios.delete('/api/rooms/' + id)
-        .then(res => {
-            let rooms = this.state.rooms.filter(room => room.id !== id);
-            this.setState({rooms: rooms});
-        });
-    }
-
-    
     addRoom(room) {
         let newRoom = {
             id: this.props.rooms.length,
@@ -52,14 +33,17 @@ class Rooms extends React.Component {
             todo: []
         }
         if(this.state.newRoomName){
-            this.props.onAddRoom(newRoom);           
+            this.props.addRoom(newRoom);           
         }
-    }
-    
+        //axios.post('/api/rooms', room).then(res => {});
+    }   
+
     deleteRoom(e, id) {
         e.stopPropagation();
-        this.props.onDeleteRoom(id);
-    }
+        let updatedRooms = this.props.rooms.filter(room => room.id !== id);
+        this.props.deleteRoom(updatedRooms);
+        // axios.delete('/api/rooms/' + id).then(res => {});
+    } 
 
     render() {                              
 
@@ -106,7 +90,8 @@ class Rooms extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        rooms: state.roomsState.rooms
+        rooms: state.roomsState.rooms,
+        user: state.userState.user
     }
 }
 
@@ -115,8 +100,8 @@ const mapDispatchToProps = (dispatch) => {
         addRoom: (item) => {
             dispatch(addRoom(item))
         },      
-        deleteRoom: (item) => {
-            dispatch(deleteRoom(item))
+        deleteRoom: (rooms) => {
+            dispatch(deleteRoom(rooms))
         }
     }
 }

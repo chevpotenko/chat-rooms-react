@@ -6,18 +6,21 @@ const roomsReducer = (state = {rooms: []}, action) => {
             }
             break;
         case 'ADD_ROOM':
-            var updatedRooms = state.rooms.map((val) => {
-                return val;
-            });
+            var updatedRooms = [...state.rooms];
             updatedRooms.push(action.payload);            
             state = {                
                 rooms: updatedRooms
             }
             break;
         case 'DELETE_ROOM':
-            var updatedRooms = state.rooms.filter(function(val) {
-                return action.payload !== val;
-            });
+            var updatedRooms = [...action.payload];
+            state = {                
+                rooms: updatedRooms
+            }
+            break;
+            break;
+        case 'UPDATE_ROOM':
+            var updatedRooms = [...action.payload];
             state = {                
                 rooms: updatedRooms
             }
