@@ -13,16 +13,14 @@ const roomsReducer = (state = {rooms: []}, action) => {
             }
             break;
         case 'DELETE_ROOM':
-            var updatedRooms = [...action.payload];
             state = {                
-                rooms: updatedRooms
+                rooms: action.payload
             }
             break;
             break;
         case 'UPDATE_ROOM':
-            var updatedRooms = [...action.payload];
             state = {                
-                rooms: updatedRooms
+                rooms: action.payload
             }
             break;
         default:

@@ -3,20 +3,12 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { addRoom, deleteRoom  } from '../../actions/rooms-actions';
+import AddForm from '../page-layout/add-form';
 
 class Rooms extends React.Component {
     
     constructor(props){
-        super(props);
-        this.state = {           
-            newRoomName: ''
-        }                
-    }  
-   
-    setNewRoomName(e) {
-        this.setState({
-            newRoomName: e.target.value
-        });     
+        super(props);                       
     }
 
     selectRoom(id) {
@@ -26,13 +18,13 @@ class Rooms extends React.Component {
         this.props.onSelectRoom(currentRoom);
     } 
     
-    addRoom(room) {
+    addRoom(value) {
         let newRoom = {
             id: this.props.rooms.length,
-            name: this.state.newRoomName,
+            name: value,
             todo: []
         }
-        if(this.state.newRoomName){
+        if(value){
             this.props.addRoom(newRoom);           
         }
         //axios.post('/api/rooms', room).then(res => {});
@@ -42,13 +34,16 @@ class Rooms extends React.Component {
         e.stopPropagation();
         let updatedRooms = this.props.rooms.filter(room => room.id !== id);
         this.props.deleteRoom(updatedRooms);
-        // axios.delete('/api/rooms/' + id).then(res => {});
+        //axios.delete('/api/rooms/' + id).then(res => {});
     } 
 
     render() {                              
 
         let roomsItems = '';
-        let roomsControl= '';
+
+        let roomsControl = this.props.user.isLogin ?
+            <AddForm onAddItem={ (value) => {this.addRoom(value)} }/>
+            : '';
 
         if (this.props.rooms) {            
             roomsItems = this.props.rooms.map((room, index) =>
@@ -63,30 +58,15 @@ class Rooms extends React.Component {
                 </li>)
         }
 
-        if(this.props.user.isLogin) {
-            roomsControl = (
-                <div className="room-control">
-                    <input type="text"
-                            className="room-newitem"
-                            value={ this.state.newRoomName }
-                            onChange={ (e) => this.setNewRoomName(e) }
-                            placeholder="Name"/>
-                    <button className="room-add"
-                            onClick={ () => this.addRoom(this.newRoom) }>add</button>
-                </div>
-            )
-        }
-
         return(
             <div className="column rooms">
                 <h3>Rooms</h3>
-                { roomsControl }            
+                { roomsControl }                            
                 <ul className="rooms-list">{ roomsItems }</ul>
             </div>
         );
     }
 }
-
 
 const mapStateToProps = (state) => {
     return {

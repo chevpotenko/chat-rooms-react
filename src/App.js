@@ -22,7 +22,6 @@ class App extends Component {
     componentDidMount() {
         // this.setUserState();         
         this.props.setUser(user.isLogin);
-        console.log('componentDidMount');
     }   
 
     setUserState() {

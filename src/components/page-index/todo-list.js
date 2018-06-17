@@ -3,22 +3,15 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateRoom } from '../../actions/rooms-actions';
 
+import AddForm from '../page-layout/add-form';
+
 class TodoList extends React.Component {
 
     constructor(props) {
-        super(props);
-        this.state = {
-            newTask: ''
-        }
+        super(props);        
     }
 
-    setNewTask(e) {
-        this.setState({
-            newTask: e.target.value
-        });
-    }
-
-   addTask(roomId) {
+   addTask(task, roomId) {
         let indexUpdatedRoom = null;
         let updatedRoom = this.props.rooms.find((item, index) => {            
             if (item.id === roomId) {
@@ -27,7 +20,7 @@ class TodoList extends React.Component {
             }
         });
         let updatedRooms = [...this.props.rooms];
-        updatedRooms[indexUpdatedRoom].todo.push(this.state.newTask);
+        updatedRooms[indexUpdatedRoom].todo.push(task);
         this.props.updateRoom(updatedRooms);
         // axios.put('/api/rooms/' + id, updatedRooms[indexUpdatedRoom]).then(res => {}); 
     }
@@ -52,8 +45,10 @@ class TodoList extends React.Component {
     render() {
         let currentRoomId = this.props.currentRoom;
         let currentRoom = null;
-        let todoItems = '';
-        let todoControls = '';
+        let todoItems = '';                
+        let todoControls = this.props.user.isLogin ?
+            <AddForm onAddItem={ (value) => {this.addTask(value, currentRoomId)} }/>
+            : '';
 
         if(this.props.rooms) { 
             currentRoom = this.props.rooms.find((item) => {
@@ -73,21 +68,7 @@ class TodoList extends React.Component {
                     }                
                 </li>
             )
-        }
-
-        if(this.props.user.isLogin) {
-            todoControls = (    
-                <div className="room-control">
-                    <input type="text"
-                            value={ this.state.newTask }
-                            onChange={ (e) => this.setNewTask(e) }
-                            className="room-newitem"
-                            placeholder="Name"/>
-                    <button className="room-add"
-                            onClick={ () => this.addTask(currentRoomId) }>add</button>
-                </div>
-            )
-        }
+        }       
 
         return (
             <div className="column">
