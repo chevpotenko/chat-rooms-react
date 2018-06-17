@@ -17,7 +17,6 @@ const roomsReducer = (state = {rooms: []}, action) => {
                 rooms: action.payload
             }
             break;
-            break;
         case 'UPDATE_ROOM':
             state = {                
                 rooms: action.payload

@@ -4,10 +4,6 @@ import { connect } from 'react-redux';
 
 class MainMenu extends React.Component {
 
-    constructor(props){
-        super(props);        
-    }
-
     render() {      
 
         let menu = this.props.user.isLogin ? (

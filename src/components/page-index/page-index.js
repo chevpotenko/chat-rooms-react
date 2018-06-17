@@ -3,20 +3,13 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 
 import Users from './users';
-import TodoList from './todo-list';
+import Todo from './todo';
 import Rooms from './rooms';
 
 import { rooms as roomsList } from '../../dummy-data/dummy-data';
 import { initRooms  } from '../../actions/rooms-actions';
 
 class PageIndex extends React.Component {
-
-    constructor(props) {
-        super(props);       
-        this.state = {
-            currentRoomId: 0
-        };
-    }
 
     componentDidMount() {
         this.props.initRooms(roomsList);       
@@ -31,15 +24,11 @@ class PageIndex extends React.Component {
         });
     }
 
-    selectRoom(room) {                
-        this.setState({currentRoomId: room.id});
-    } 
-
     render() {
         return ( 
             <div className="content-row">
-                <Rooms onSelectRoom={ this.selectRoom.bind(this) }/>
-                <TodoList currentRoom={ this.state.currentRoomId }/>
+                <Rooms/>
+                <Todo currentRoom={ this.props.currentRoomId }/>
                 <Users/>
             </div>
         );
@@ -47,7 +36,9 @@ class PageIndex extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {}
+    return {
+        currentRoomId: state.roomState.currentRoomId
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {

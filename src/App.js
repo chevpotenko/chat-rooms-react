@@ -14,11 +14,7 @@ import PageSignUp from './components/page-sign-up/sign-up';
 import MainMenu from './components/page-layout/main-menu';
 
 class App extends Component {
-    
-    constructor(props) {
-        super(props); 
-    }
-    
+        
     componentDidMount() {
         // this.setUserState();         
         this.props.setUser(user.isLogin);
